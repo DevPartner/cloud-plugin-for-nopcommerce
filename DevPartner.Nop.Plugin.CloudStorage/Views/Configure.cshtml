@@ -1,0 +1,108 @@
+﻿@{
+    Layout = "~/Plugins/DevPartner.CloudStorage/Views/_DP_ConfigurePlugin.cshtml";
+    Html.SetActiveMenuItemSystemName("DP_CloudSettings");
+}
+
+@model DevPartner.Nop.Plugin.CloudStorage.Models.ConfigurationModel
+<style>
+    .data {
+        width: auto;
+        margin: 0 5px;
+        padding-top: 14px;
+        display: inline-block;
+        float: left;
+    }
+</style>
+
+
+<script>
+    $(document).ready(function() {
+        $("#@Html.IdFor(model => model.AlwaysShowMainImage)").click(toggleAlwaysShowMainImage);
+  
+        toggleAlwaysShowMainImage();
+    });
+
+    function toggleAlwaysShowMainImage() {
+        if ($('#@Html.IdFor(model => model.AlwaysShowMainImage)').is(':checked')) {
+            $('#pnlAlwaysShowMainImage').show();
+        } else {
+            $('#pnlAlwaysShowMainImage').hide();
+        }
+    }
+</script>
+
+<div class="panel-group">
+    <div class="panel panel-default">
+        <div class="panel-body">
+
+            <form asp-controller="MiscCloudStorage" asp-action="Configure" method="post">
+                @Html.AntiForgeryToken()
+
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="AlwaysShowMainImage" asp-template="~/Plugins/DevPartner.CloudStorage/Views/EditorTemplates/ProviderSettings.cshtml" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="AlwaysShowMainImage" />
+                        <span asp-validation-for="AlwaysShowMainImage"></span>
+                    </div>
+                </div>
+                <nop-nested-setting asp-for="AlwaysShowMainImage" id="pnlAlwaysShowMainImage">
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="MainImageUrlFormat" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="MainImageUrlFormat" />
+                            <span asp-validation-for="MainImageUrlFormat"></span>
+                        </div>
+                    </div>
+                </nop-nested-setting>
+
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="CheckIfImageExist" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="CheckIfImageExist" />
+                        <span asp-validation-for="CheckIfImageExist"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="ArchiveDownloads" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="ArchiveDownloads" />
+                        <span asp-validation-for="ArchiveDownloads"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="StoreImageInDb" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="StoreImageInDb" />
+                        <span asp-validation-for="StoreImageInDb"></span>
+                    </div>
+                </div>
+                <dp-choose-provider asp-for="PictureStoreType" asp-template="~/Plugins/DevPartner.CloudStorage/Views/EditorTemplates/ProviderSettings.cshtml" />
+                <dp-choose-provider asp-for="ThumbPictureStoreType" asp-template="~/Plugins/DevPartner.CloudStorage/Views/EditorTemplates/ProviderSettings.cshtml" />
+                <dp-choose-provider asp-for="DownloadStoreType" asp-template="~/Plugins/DevPartner.CloudStorage/Views/EditorTemplates/ProviderSettings.cshtml" />
+                <dp-choose-provider asp-for="ContentStoreType" asp-template="~/Plugins/DevPartner.CloudStorage/Views/EditorTemplates/ProviderSettings.cshtml" />
+
+                <div class="form-group">
+                    <div class="col-md-3">
+                        &nbsp;
+                    </div>
+                    <div class="col-md-9">
+                        <div class="pull-left">
+                            <input type="submit" name="save-main-settings" class="btn bg-blue" onclick="return confirm('@T("Admin.Common.AreYouSure")');" value="@T("DevPartner.CloudStorage.ConfigureModel.ButtonSave")" />
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

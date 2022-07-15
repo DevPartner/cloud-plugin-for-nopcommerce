@@ -1,0 +1,47 @@
+﻿@using Nop.Core
+@using Nop.Services.Plugins
+@using Nop.Services.Common
+@inject IPluginManager<IMiscPlugin> miscPluginManager
+@inject IWebHelper webHelper
+@inject IWorkContext workContext
+@{
+    var miscPlugins = miscPluginManager.LoadAllPlugins(workContext.CurrentCustomer);
+    var plugin = miscPlugins.FirstOrDefault(x => x.PluginDescriptor.SystemName == "DevPartner.CloudStorage");
+
+    //friendly name
+    var friendlyName = plugin?.PluginDescriptor.FriendlyName;
+
+    var activeMenuSystemName = string.Empty;
+    var configureLocale = string.Empty;
+    var backToLocale = string.Empty;
+    var listActionMethodName = string.Empty;
+    var listControllerName = string.Empty;
+
+
+    //cloud plugin
+    configureLocale = "DevPartner.Cloud.Configure.Settings";
+    backToLocale = "DevPartner.Cloud.Configure.Settings.BackToList";
+    listActionMethodName = "Configure";
+    listControllerName = "MiscCloudStorage";
+
+    Layout = "_AdminLayout";
+    //page title
+    ViewBag.Title = T(configureLocale).Text + " - " + friendlyName;
+}
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @T(configureLocale) - @friendlyName
+        <small>
+            <i class="fa fa-arrow-circle-left"></i>
+            <a asp-action="@listActionMethodName" asp-controller="@listControllerName">@T(backToLocale)</a>
+        </small>
+    </h1>
+    <div class="pull-right">
+        &nbsp;
+    </div>
+</div>
+<div class="content">
+    <div class="form-horizontal">
+        @RenderBody()
+    </div>
+</div>

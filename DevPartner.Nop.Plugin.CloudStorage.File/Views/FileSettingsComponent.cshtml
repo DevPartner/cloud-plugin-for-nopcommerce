@@ -1,0 +1,72 @@
+﻿@using System.Text.Encodings.Web
+@model DevPartner.Nop.Plugin.CloudStorage.File.Models.SettingsModel
+@{
+    var nameDirectoryForFiles = @Model.ProviderType + ".File." + "DirectoryForFiles";
+}
+<div class="form-group">
+    <div class="col-md-3">
+        <nop-label asp-for="DirectoryForFiles" />
+    </div>
+    <div class="col-md-9">
+        <input asp-for="DirectoryForFiles" name="@nameDirectoryForFiles" />
+        <span asp-validation-for="DirectoryForFiles"></span>
+    </div>
+</div>
+<div class="form-group">
+    <div class="col-md-3">
+        &nbsp;
+    </div>
+    <div class="col-md-9">
+        <div class="requirement-data-buttons">
+            <input type="button" id="save-cloudstorage-@(Model.ProviderType)" class="btn btn-primary" value="@T("Admin.Common.Save")" />
+        </div>
+    </div>
+</div>
+
+<div class="form-group">
+    <div class="col-md-offset-3 col-md-9 requirement-messages-col">
+        <div class="pull-left">
+            <div id="pnl-save-cloudstorage-result-@(Model.ProviderType)" style="display: none;" class="text-green margin-t-5">
+                @T("devpartner.cloudstorage.configure.settingssaved")
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#save-cloudstorage-@(Model.ProviderType)').click(function () {
+            var directoryForFiles = $("input[name='@nameDirectoryForFiles']").val();
+            var providerType = '@Model.ProviderType';
+
+            var postData = {
+                directoryForFiles: directoryForFiles,
+                providerType: providerType
+            };
+            addAntiForgeryToken(postData);
+
+            $.ajax({
+                cache:false,
+                type: "POST",
+                url: "@(Url.Action("SaveSettings", "FileStorage"))",
+                data: postData,
+                success: function(response) {
+                    if (response.Error) {
+                        if ((typeof response.Message) == 'string') {
+                            alert(response.Message);
+                        } else {
+                            alert(response.Message.join("\n"));
+                        }
+
+                        return false;
+                    } else {
+                        $('#pnl-save-cloudstorage-result-@(Model.ProviderType)').fadeIn("slow").delay(1000).fadeOut("slow");
+                    }
+                },
+                error:function (xhr, ajaxOptions, thrownError){
+                    alert('@Html.Raw(JavaScriptEncoder.Default.Encode(T("devpartner.cloudstorage.configure.FailedToSave").Text))');
+                }
+            });
+        });
+    });
+</script>

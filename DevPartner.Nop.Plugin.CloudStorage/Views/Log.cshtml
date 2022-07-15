@@ -1,0 +1,225 @@
+﻿@model DevPartner.Nop.Plugin.CloudStorage.Models.LogFilterModel
+
+@{
+    Layout = "~/Plugins/DevPartner.CloudStorage/Views/_DP_ConfigurePlugin.cshtml";
+    Html.SetActiveMenuItemSystemName("DP_CloudLog");
+    const int pageSize = 25;
+}
+
+<style>
+    /*.filter-options {
+        float: left;
+        padding: 5px;
+        border: 1px solid #ccc;
+    }*/
+</style>
+
+<div class="panel-group">
+    <div class="panel panel-default">
+        <div class="panel-body filter-options">
+
+            <form asp-controller="MiscCloudStorage" asp-action="Log" method="post">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h4>@T("DevPartner.CloudStorage.LogFilterModel.Items")</h4>
+                        <div class="form-group">
+                            <div class="col-md-9">
+                                <nop-label asp-for="ShowPictures" />
+                            </div>
+                            <div class="col-md-3">
+                                <nop-editor asp-for="ShowPictures" />
+                                <span asp-validation-for="ShowPictures" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-9">
+                                <nop-label asp-for="ShowDownloads" />
+                            </div>
+                            <div class="col-md-3">
+                                <nop-editor asp-for="ShowDownloads" />
+                                <span asp-validation-for="ShowDownloads" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-9">
+                                <nop-label asp-for="ShowFiles" />
+                            </div>
+                            <div class="col-md-3">
+                                <nop-editor asp-for="ShowFiles" />
+                                <span asp-validation-for="ShowFiles" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <h4>@T("DevPartner.CloudStorage.LogFilterModel.Statuses")</h4>
+                        <div class="form-group">
+                            <div class="col-md-9">
+                                <nop-label asp-for="ShowPending" />
+                            </div>
+                            <div class="col-md-3">
+                                <nop-editor asp-for="ShowPending" />
+                                <span asp-validation-for="ShowPending" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-9">
+                                <nop-label asp-for="ShowProcessing" />
+                            </div>
+                            <div class="col-md-3">
+                                <nop-editor asp-for="ShowProcessing" />
+                                <span asp-validation-for="ShowProcessing" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-9">
+                                <nop-label asp-for="ShowSucceed" />
+                            </div>
+                            <div class="col-md-3">
+                                <nop-editor asp-for="ShowSucceed" />
+                                <span asp-validation-for="ShowSucceed" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-9">
+                                <nop-label asp-for="ShowFailed" />
+                            </div>
+                            <div class="col-md-3">
+                                <nop-editor asp-for="ShowFailed" />
+                                <span asp-validation-for="ShowFailed" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="panel-group">
+    <div class="panel panel-default">
+        <div class="panel-body ">
+            <div id="moving-items-log"></div>
+        </div>
+    </div>
+</div>
+<script>
+    function filterData() {
+        return {
+            ShowPictures: $('#@Html.IdFor(model => model.ShowPictures)').prop('checked'),
+            ShowDownloads: $('#@Html.IdFor(model => model.ShowDownloads)').prop('checked'),
+            ShowFiles: $('#@Html.IdFor(model => model.ShowFiles)').prop('checked'),
+            ShowPending: $('#@Html.IdFor(model => model.ShowPending)').prop('checked'),
+            ShowProcessing: $('#@Html.IdFor(model => model.ShowProcessing)').prop('checked'),
+            ShowSucceed: $('#@Html.IdFor(model => model.ShowSucceed)').prop('checked'),
+            ShowFailed: $('#@Html.IdFor(model => model.ShowFailed)').prop('checked')
+        };
+    }
+
+    function onFilterOptionsChange() {
+        $('.filter-options input[type=checkbox]').change(function () {
+            $("#moving-items-log").data("kendoGrid").dataSource.read();
+        });
+    }
+
+    function adjustClearLog() {
+        $.ajax({
+            cache: false,
+            url: '@Url.Action("AjaxClearLog", "MiscCloudStorage")',
+            type: 'post',
+            data: {
+                clearPictures: $('#@Html.IdFor(model => model.ShowPictures)').prop('checked'),
+                clearDownloads: $('#@Html.IdFor(model => model.ShowDownloads)').prop('checked'),
+                clearFiles: $('#@Html.IdFor(model => model.ShowFiles)').prop('checked'),
+            },
+            dataType: "json",
+            success: function() {
+                $("#moving-items-log").data("kendoGrid").dataSource.read();
+                return true;
+            },
+            error: function() {
+                alert('Failed to clear log.');
+                return false;
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        onFilterOptionsChange();
+
+        $("#moving-items-log").kendoGrid({
+            dataSource: {
+                type: "json",
+                transport: {
+                    read: {
+                        url: "@Html.Raw(Url.Action("LogItemList", "MiscCloudStorage"))",
+                        type: "GET",
+                        data: filterData,
+                        dataType: "json"
+                    }
+                },
+                schema: {
+                    data: "Data",
+                    total: "Total",
+                    errors: "Errors",
+                    model: {
+                        id: "Id",
+                        fields: {
+                            Id: { editable: false, type: "number" },
+                            Item: { editable: false, type: "string" },
+                            StoreType: { editable: false, type: "string" },
+                            Status: { editable: false, type: "string" },
+                            CreatedOnUtc: { editable: false, type: "string" },
+                            ChangedOnUtc: { editable: false, type: "string" }
+                        }
+                    }
+                },
+                requestEnd: function(e) {
+                    if (e.type == "update" || e.type == "create" || e.type == "destroy") {
+                        this.read();
+                    }
+                },
+                error: function(e) {
+                    display_kendoui_grid_error(e);
+                    this.cancelChanges();
+                },
+                pageSize: @pageSize,
+                serverPaging: true,
+                serverFiltering: true,
+                serverSorting: true
+            },
+            sortable: false,
+            pageable: {
+                refresh: true,
+            },
+            scrollable: false,
+            editable: false,
+            columns: [
+                {
+                    field: "Id",
+                    title: "@T("DevPartner.CloudStorage.MovingItemModel.Id")",
+                    width: 100
+                }, {
+                    field: "Item",
+                    title: "@T("DevPartner.CloudStorage.MovingItemModel.Item")"
+                }, {
+                    field: "StoreType",
+                    title: "@T("DevPartner.CloudStorage.MovingItemModel.StoreType")",
+                    width: 100
+                }, {
+                    field: "Status",
+                    title: "@T("DevPartner.CloudStorage.MovingItemModel.Status")",
+                    width: 100
+                }, {
+                    field: "CreatedOnUtc",
+                    title: "@T("DevPartner.CloudStorage.MovingItemModel.CreatedOnUtc")",
+                    width: 140
+                }, {
+                    field: "ChangedOnUtc",
+                    title: "@T("DevPartner.CloudStorage.MovingItemModel.ChangedOnUtc")",
+                    width: 140
+                }
+            ]
+        });
+    });
+</script>

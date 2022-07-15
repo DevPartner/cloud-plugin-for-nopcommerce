@@ -1,0 +1,1 @@
+﻿http://codehelper.net/asp-net/azure-net-core-web-app-and-where-to-locate-static-files/

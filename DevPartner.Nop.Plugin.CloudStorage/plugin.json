@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Dev-Partner",
+  "FriendlyName": "DevPartner Cloud Storage",
+  "SystemName": "DevPartner.CloudStorage",
+  "Version": "2.2",
+  "SupportedVersions": [ "4.20" ],
+  "Author": "Dev-Partner.biz",
+  "DisplayOrder": 2,
+  "FileName": "DevPartner.Nop.Plugin.CloudStorage.dll",
+  "Description": "This plugin allows you to use Cloud for your downloads and pictures"
+}

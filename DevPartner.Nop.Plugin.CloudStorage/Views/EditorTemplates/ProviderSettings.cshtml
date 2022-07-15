@@ -1,0 +1,55 @@
+﻿
+@using DevPartner.Nop.Plugin.CloudStorage
+@model String
+@{
+    var tagName = ViewData["Name"] as string;
+    var component = ViewData["Component"] as string;
+}
+<div class='form-group'>
+    <div class="col-md-3">
+        <nop-label asp-for="@Model" />
+    </div>
+    <div class="col-md-9">
+        @foreach (var item in ((IEnumerable<SelectListItem>)ViewData["SelectList"]))
+        {
+            <div class="data">
+                @Html.RadioButtonFor(model => model, item.Value)
+            </div>
+            <div class="data">
+                @item.Text
+            </div>
+        }
+
+        <div class="data">
+            @T("DevPartner.CloudStorage.ConfigureModel.NOTE."+ tagName)
+        </div>
+    </div>
+</div>
+<div id="settings-@tagName-component">
+    @if (!String.IsNullOrEmpty(component))
+    {
+        @await Component.InvokeAsync(component, new { type = tagName, providerSystemName = Model })
+    }
+</div>
+<script>
+    $(function () {
+
+        $('input[type=radio][name=@tagName]').change(function() {
+            var providerSystemName = this.value;
+            var url = '@Url.Action("GetSettings", "MiscCloudStorage")';
+            $.ajax({
+                type: "GET",
+                url: url,
+                dataType: "html",
+                data: addAntiForgeryToken({ providerSystemName: providerSystemName, type: '@tagName' }),
+
+                success: function (content) {
+                    $("#settings-@tagName-component").html(content);
+                },
+                error: function (e) { }
+            });
+
+        });
+
+    });
+</script>
