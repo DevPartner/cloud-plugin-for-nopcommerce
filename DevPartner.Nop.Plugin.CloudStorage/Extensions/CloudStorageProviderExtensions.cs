@@ -5,14 +5,12 @@ namespace DevPartner.Nop.Plugin.CloudStorage.Extensions
 
     public static class CloudStorageProviderExtensions
     {
-        public static ICloudStorageProvider IsNotNull(this ICloudStorageProvider provider)
+        public static bool IsNull(this ICloudStorageProvider provider)
         {
-            if (!CloudStoragePlugin.IsActive())
-                return null;
-            if(!CloudStoragePlugin.IsValidLicense())
-                return null;
+            if (provider == null)
+                return true;
             var emptyProvider = provider as NullCloudStorageProvider;
-            return emptyProvider != null ? null : provider;
+            return emptyProvider != null ? true : false;
         }
     }
 }

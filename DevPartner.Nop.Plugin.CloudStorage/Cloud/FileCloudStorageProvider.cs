@@ -17,19 +17,21 @@ namespace DevPartner.Nop.Plugin.CloudStorage.Cloud
     /// </summary>
     public class FileCloudStorageProvider :  ICloudContentProvider, ICloudDownloadProvider, ICloudPictureProvider, ICloudThumbPictureProvider
     {
-
         #region Fields
         private readonly ILocalizationService _localizationService;
         private readonly INopFileProvider _fileProvider;
         #endregion
+
+        #region Ctor
         public FileCloudStorageProvider(
             ILocalizationService localizationService, INopFileProvider fileProvider)
         {
             _localizationService = localizationService;
             _fileProvider = fileProvider;
         }
+        #endregion
 
-
+        #region Methods
         /// <summary>
         /// Get the unique name of the file (add -copy-(N) to the file name if there is already a file with that name in the directory)
         /// </summary>
@@ -193,5 +195,41 @@ namespace DevPartner.Nop.Plugin.CloudStorage.Cloud
         {
             throw new NotImplementedException();
         }
+
+        public void WriteAllBytes(string filePath, byte[] bytes)
+        {
+            throw new NotImplementedException();
+        }
+
+        public byte[] ReadAllBytes(string path)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string[] GetFiles(string directoryPath, string searchPattern = "", bool topDirectoryOnly = true)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string GetAbsolutePath(string path)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void CreateDirectory(string path)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool FileExists(string path)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string GetVirtualPath(string filePath)
+        {
+            throw new NotImplementedException();
+        }
+        #endregion
     }
 }

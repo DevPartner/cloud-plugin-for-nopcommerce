@@ -1,20 +1,19 @@
 ﻿using System;
-using System.Globalization;
-using DevPartner.Nop.Plugin.CloudStorage.Models;
 using Nop.Core;
 
 namespace DevPartner.Nop.Plugin.CloudStorage.Domain
 {
     public class MovingItem : BaseEntity 
     {
+        #region Properties
         /// <summary>
         /// Gets or sets the Old Storage Name
         /// </summary>
-        public MovingItemTypes Types { get; set; }
+        public int TypeId { get; set; }
         /// <summary>
         /// Gets or sets the Status
         /// </summary>
-        public MovingItemStatus Status { get; set; }
+        public int StatusId { get; set; }
         /// <summary>
         /// Gets or sets the Created Date
         /// </summary>
@@ -22,7 +21,7 @@ namespace DevPartner.Nop.Plugin.CloudStorage.Domain
         /// <summary>
         /// Gets or sets the Change Date
         /// </summary>
-        public DateTime ChangedOnUtc { get; set; }
+        public DateTime UpdatedOnUtc { get; set; }
 
         /// <summary>
         /// Gets or sets the EntiyId
@@ -38,6 +37,29 @@ namespace DevPartner.Nop.Plugin.CloudStorage.Domain
         /// Gets or sets the OldProviderSystemName
         /// </summary>
         public string OldProviderSystemName { get; set; }
+        #endregion
+
+        #region Custom properties
+        /// <summary>
+        /// Gets or sets the Old Storage Name
+        /// </summary>
+        public MovingItemTypes Types
+        {
+            get => (MovingItemTypes)TypeId;
+            set => TypeId = (int)value;
+        }
+
+        /// <summary>
+        /// Gets or sets the Status
+        /// </summary>
+        public MovingItemStatus Status
+        {
+            get => (MovingItemStatus)StatusId;
+            set => StatusId = (int)value;
+        }
+
+        #endregion
+        /*
         public MovingItemModel ToModel()
         {
             return new MovingItemModel()
@@ -49,7 +71,7 @@ namespace DevPartner.Nop.Plugin.CloudStorage.Domain
                 CreatedOnUtc = CreatedOnUtc.ToString(CultureInfo.InvariantCulture),
                 ChangedOnUtc = CreatedOnUtc.ToString(CultureInfo.InvariantCulture),
             };
-        }
+        }*/
 
     }
 }

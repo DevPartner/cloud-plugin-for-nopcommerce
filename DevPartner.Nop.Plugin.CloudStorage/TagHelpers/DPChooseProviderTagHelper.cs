@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Autofac.Features.Metadata;
 using DevPartner.Nop.Plugin.CloudStorage.Cloud;
 using DevPartner.Nop.Plugin.CloudStorage.Extensions;
 using Microsoft.AspNetCore.Html;
@@ -26,7 +25,7 @@ namespace DevPartner.Nop.Plugin.CloudStorage.TagHelpers
         private const string PostfixAttributeName = "asp-postfix";
 
         private readonly IHtmlHelper _htmlHelper;
-        private readonly IEnumerable<Meta<ICloudStorageProviderFactory>> _cloudStorageProviders;
+        private readonly CloudProviderFactory _cloudProviderFactory;
 
         /// <summary>
         /// An expression to be evaluated against the current model
@@ -62,10 +61,10 @@ namespace DevPartner.Nop.Plugin.CloudStorage.TagHelpers
         /// Ctor
         /// </summary>
         /// <param name="htmlHelper">HTML helper</param>
-        public DPChooseProviderTagHelper(IHtmlHelper htmlHelper, IEnumerable<Meta<ICloudStorageProviderFactory>> cloudStorageProviders)
+        public DPChooseProviderTagHelper(IHtmlHelper htmlHelper, CloudProviderFactory cloudProviderFactory)
         {
             _htmlHelper = htmlHelper;
-            _cloudStorageProviders = cloudStorageProviders;
+            _cloudProviderFactory = cloudProviderFactory;
         }
 
         /// <summary>
@@ -73,7 +72,7 @@ namespace DevPartner.Nop.Plugin.CloudStorage.TagHelpers
         /// </summary>
         /// <param name="context">Context</param>
         /// <param name="output">Output</param>
-        public override void Process(TagHelperContext context, TagHelperOutput output)
+        public override async void Process(TagHelperContext context, TagHelperOutput output)
         {
             if (context == null)
             {
@@ -110,17 +109,31 @@ namespace DevPartner.Nop.Plugin.CloudStorage.TagHelpers
 
             //generate editor
             var tagName = For != null ? For.Name : Name;
-            var settings = For != null ? _cloudStorageProviders.GetComponentSettings(For.Model.ToString()) : null;
-            var items = (from provider in _cloudStorageProviders
-                         select provider.Metadata["SystemName"] as string into systemName
+
+            var providers = _cloudProviderFactory.GetAll();
+            var items = (from provider in providers
+                         select provider.Value.GetType().GetSystemName() as string into systemName
                          where !String.IsNullOrEmpty(systemName)
                          select new SelectListItem() { Value = systemName, Text = systemName }).ToList();
+
+            string componentName = null;
+
+            if (providers.ContainsKey(For.Model.ToString()))
+            {
+                var currProvider = providers[For.Model.ToString()];
+                componentName = currProvider.GetType().GetComponentName();
+            }
+/*var settings = For != null ? _cloudProviderFactory.GetComponentSettings(For.Model.ToString()) : null;
+            var items = (from provider in _cloudProviderFactory
+                         select provider.Metadata["SystemName"] as string into systemName
+                         where !String.IsNullOrEmpty(systemName)
+                         select new SelectListItem() { Value = systemName, Text = systemName }).ToList();*/
             if (!string.IsNullOrEmpty(tagName))
             {
                 IHtmlContent selectList;
                 if (!String.IsNullOrEmpty(Template))
                 {
-                    selectList = _htmlHelper.Editor(tagName, Template, new { htmlAttributes, SelectList = items, Component = settings, Name = tagName });
+                    selectList = _htmlHelper.Editor(tagName, Template, new { htmlAttributes, SelectList = items, Component = componentName, Name = tagName });
                 }
                 else
                 {
@@ -131,7 +144,7 @@ namespace DevPartner.Nop.Plugin.CloudStorage.TagHelpers
 
                     selectList = _htmlHelper.DropDownList(tagName, items, htmlAttributes);
                 }
-                output.Content.SetHtmlContent(selectList.RenderHtmlContent());
+                output.Content.SetHtmlContent(await selectList.RenderHtmlContentAsync());
             }
         }
     }

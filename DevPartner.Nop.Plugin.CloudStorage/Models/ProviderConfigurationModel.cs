@@ -2,7 +2,7 @@
 
 namespace DevPartner.Nop.Plugin.CloudStorage.Models
 {
-    public class ProviderConfigurationModel : BaseNopModel
+    public partial record ProviderConfigurationModel : BaseNopModel
     {
         public string ProviderSystemName { get; set; }
 

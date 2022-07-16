@@ -1,18 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
-    <Version>2.2.0</Version>
+    <TargetFramework>net6.0</TargetFramework>
+    <Version>2.8.0</Version>
     <Authors>Dev-Partner.biz</Authors>
     <Company>Dev-Partner.biz</Company>
     <Description>This plugin allows you to use Cloud for your downloads and pictures</Description>
     <Copyright>Copyright © Dev Partner, LCC</Copyright>
     <PackageProjectUrl>http://www.dev-partner.biz/</PackageProjectUrl>
-    <AssemblyVersion>2.2.0.0</AssemblyVersion>
-    <FileVersion>2.2.0.0</FileVersion>
+    <AssemblyVersion>2.8.0.0</AssemblyVersion>
+    <FileVersion>2.8.0.0</FileVersion>
     <RepositoryType>Git</RepositoryType> 
   </PropertyGroup>  
-  
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <OutputPath>..\..\Presentation\Nop.Web\Plugins\DevPartner.CloudStorage\</OutputPath>
     <OutDir>$(OutputPath)</OutDir>
@@ -27,37 +26,51 @@
     <MSBuild Projects="$(MSBuildProjectDirectory)\..\..\Build\ClearPluginAssemblies.proj" Properties="PluginPath=$(MSBuildProjectDirectory)\$(OutDir)" Targets="NopClear" />
   </Target>
   <ItemGroup>
+    <Compile Remove="Components\**" />
+    <Compile Remove="Kendoui\**" />
     <Compile Remove="Singletons\**" />
+    <Compile Remove="SQL\**" />
     <Compile Remove="Views\Boards\**" />
     <Compile Remove="Views\Shared\**" />
+    <EmbeddedResource Remove="Components\**" />
+    <EmbeddedResource Remove="Kendoui\**" />
     <EmbeddedResource Remove="Singletons\**" />
+    <EmbeddedResource Remove="SQL\**" />
     <EmbeddedResource Remove="Views\Boards\**" />
     <EmbeddedResource Remove="Views\Shared\**" />
+    <None Remove="Components\**" />
+    <None Remove="Kendoui\**" />
     <None Remove="Singletons\**" />
+    <None Remove="SQL\**" />
     <None Remove="Views\Boards\**" />
     <None Remove="Views\Shared\**" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Remove="Cloud\FileCloudStorageProvider.cs" />
     <Compile Remove="Controllers\DPRoxyFilemanController.cs" />
     <Compile Remove="Data\PictureMap.cs" />
     <Compile Remove="Domain\PictureExt.cs" />
+    <Compile Remove="Extensions\EnumerableExtensions.cs" />
+    <Compile Remove="Extensions\RepositoryDownload.cs" />
     <Compile Remove="Infrastructure\RouteProvider.cs" />
+    <Compile Remove="Models\LogFilterModel.cs" />
+    <Compile Remove="Models\MediaModel.cs" />
+    <Compile Remove="Models\MovingItemModel.cs" />
     <Compile Remove="Services\CloudStorageProviderManagerService.cs" />
+    <Compile Remove="Services\DPImportManager.cs" />
+    <Compile Remove="Services\InstallationService.cs" />
+    <Compile Remove="Services\StoreContentService.cs" />
+    <Compile Remove="Services\StorePictureService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="logo.jpg" />
     <None Remove="plugin.json" />
     <None Remove="pluginsettings.json" />
-    <None Remove="roxyConf.json" />
     <None Remove="TagHelpers\RichEditor.cshtml" />
     <None Remove="Views\_DP_ConfigurePlugin.cshtml" />
     <None Remove="Views\_ViewImports.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="roxyConf.json">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="logo.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -76,33 +89,11 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Obfuscar" Version="2.2.11" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.3.0" />
-  </ItemGroup>
-  <ItemGroup>
     <None Update="logo.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="plugin.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="SQL\create_script.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SQL\Update_15.07.2022.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SQL\Update_16.09.2019.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SQL\Update_02.11.2017.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SQL\Update_01.05.2018.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="SQL\Update_DP_CloudStorage_Queue.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Views\Change.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -166,15 +157,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Components\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\Presentation\Nop.Web.Framework\Nop.Web.Framework.csproj">
-      <Private>false</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Presentation\Nop.Web\Nop.Web.csproj">
-      <Private>false</Private>
-      <IncludeAssets>none</IncludeAssets>
-    </ProjectReference>
+    <ProjectReference Include="..\..\Presentation\Nop.Web.Framework\Nop.Web.Framework.csproj" />
+    <ProjectReference Include="..\..\Presentation\Nop.Web\Nop.Web.csproj" />
   </ItemGroup>
 </Project>

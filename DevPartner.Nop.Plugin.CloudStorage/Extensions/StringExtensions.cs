@@ -6,28 +6,6 @@ namespace DevPartner.Nop.Plugin.CloudStorage.Extensions
 
     public static class StringExtensions
     {
-        public static Boolean ToBoolean(this string str, bool defaultValue = false)
-        {
-            if (!string.IsNullOrEmpty(str))
-            {
-                bool output;
-                switch (str)
-                {
-                    case "0":
-                        str = false.ToString();
-                        break;
-                    case "1":
-                        str = true.ToString();
-                        break;
-                }
-
-                if (bool.TryParse(str, out output))
-                    return output;
-            }
-            return defaultValue;
-        }
-
-
         public static string GetFileExtension(this string filePath)
         {
             return $".{filePath.Split(".".ToCharArray()).Last().ToLower().Trim()}";

@@ -3,7 +3,7 @@ using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace DevPartner.Nop.Plugin.CloudStorage.Models
 {
-    public class MediaModel : BaseNopModel
+    public partial record MediaModel : BaseNopModel
     {
         [NopResourceDisplayName("DevPartner.CloudStorage.ConfigureModel.PictureStoreType")]
         public string PictureStoreType { get; set; }

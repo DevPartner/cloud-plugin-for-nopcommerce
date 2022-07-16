@@ -3,7 +3,7 @@ using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace DevPartner.Nop.Plugin.CloudStorage.Models
 {
-    public class LogFilterModel : BaseNopModel
+    public partial record LogFilterModel : BaseNopModel
     {
         [NopResourceDisplayName("DevPartner.CloudStorage.LogFilterModel.ShowPictures")]
         public bool ShowPictures { get; set; }

@@ -1,10 +1,10 @@
 ﻿#region Copyright
-/* Copyright (C) 2016 Fine Support L.P. - All Rights Reserved. 
+/* Copyright (C) 2016 Dev Partner LLC - All Rights Reserved. 
  *
  * This file is part of DevPartner.Core.
  * 
  * DevPartner.Core can not be copied and/or distributed without the express
- * permission of Fine Support L.P.
+ * permission of Dev Partner LLC
  *
  * Written by Kanstantsin Ivinki, July 2016
  * Email: info@dev-partner.biz
@@ -13,51 +13,61 @@
 #endregion
 
 using System.Collections.Generic;
-using Nop.Core.Domain.Tasks;
-using Nop.Services.Tasks;
+using System.Threading.Tasks;
+using Nop.Core.Domain.ScheduleTasks;
+using Nop.Core.Infrastructure;
+using Nop.Services.ScheduleTasks;
+
 
 namespace DevPartner.Nop.Plugin.CloudStorage.Extensions
 {
     public static class ScheduleTaskServiceExtensions
     {
 
-        public static void InsertTaskIfDoesntExist(this IScheduleTaskService scheduleTaskService, ScheduleTask task)
+        public static async Task InsertTaskIfDoesntExistAsync(this IScheduleTaskService scheduleTaskService, ScheduleTask task)
         {
-            var dbTask = scheduleTaskService.GetTaskByType(task.Type);
+            var dbTask = await scheduleTaskService.GetTaskByTypeAsync(task.Type);
             if (dbTask == null)
             {
-                scheduleTaskService.InsertTask(task);
+                await scheduleTaskService.InsertTaskAsync(task);
             }
         }
 
-        public static void InsertTasksIfDoesntExist(this IScheduleTaskService scheduleTaskService, List<ScheduleTask> tasks)
+        public static async Task InsertTasksIfDoesntExistAsync(this IScheduleTaskService scheduleTaskService, List<ScheduleTask> tasks)
         {
-            tasks.ForEach(scheduleTaskService.InsertTaskIfDoesntExist);
+            foreach (var item in tasks)
+            {
+                await scheduleTaskService.InsertTaskIfDoesntExistAsync(item);
+            }
         }
 
-        public static void DeleteTaksByType(this IScheduleTaskService scheduleTaskService, ScheduleTask task)
+        public static async Task DeleteTaksByTypeAsync(this IScheduleTaskService scheduleTaskService, ScheduleTask task)
         {
-            var dbTask = scheduleTaskService.GetTaskByType(task.Type);
+            var dbTask = await scheduleTaskService.GetTaskByTypeAsync(task.Type);
             if (dbTask != null)
             {
-                scheduleTaskService.DeleteTask(dbTask);
+                await scheduleTaskService.DeleteTaskAsync(dbTask);
             }
         }
 
-        public static void DeleteTasks(this IScheduleTaskService scheduleTaskService, List<ScheduleTask> tasks)
+        public static async Task DeleteTasksAsync(this IScheduleTaskService scheduleTaskService, List<ScheduleTask> tasks)
         {
-            tasks.ForEach(scheduleTaskService.DeleteTaksByType);
+            foreach (var item in tasks)
+            {
+                await scheduleTaskService.DeleteTaksByTypeAsync(item);
+            }
         }
 
-        public static void Execute(this IScheduleTaskService scheduleTaskService, string taskType)
+        public static async Task ExecuteAsync(this IScheduleTaskService scheduleTaskService, string taskType)
         {
-            var scheduleTask = scheduleTaskService.GetTaskByType(taskType);
+            var scheduleTask = await scheduleTaskService.GetTaskByTypeAsync(taskType);
 
             if (scheduleTask != null)
             {
                 scheduleTask.Enabled = true;
-                var task = new Task(scheduleTask) { Enabled = true };
-                task.Execute(true, false);
+                var scheduleTaskRunner = EngineContext.Current.Resolve<IScheduleTaskRunner>();
+
+                await scheduleTaskRunner.ExecuteAsync(scheduleTask);
             }
         }
     }

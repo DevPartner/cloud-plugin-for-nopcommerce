@@ -5,7 +5,7 @@
 @inject IWebHelper webHelper
 @inject IWorkContext workContext
 @{
-    var miscPlugins = miscPluginManager.LoadAllPlugins(workContext.CurrentCustomer);
+    var miscPlugins = await miscPluginManager.LoadActivePluginsAsync(new List<string>() { "DevPartner.CloudStorage" });
     var plugin = miscPlugins.FirstOrDefault(x => x.PluginDescriptor.SystemName == "DevPartner.CloudStorage");
 
     //friendly name

@@ -3,7 +3,7 @@ using Nop.Web.Framework.Mvc.ModelBinding;
 
 namespace DevPartner.Nop.Plugin.CloudStorage.Models
 {
-    public class MovingItemModel : BaseNopModel
+    public partial record MovingItemModel : BaseNopModel
     {
         [NopResourceDisplayName("DevPartner.CloudStorage.MovingItemModel.Id")]
         public int Id { get; set; }
