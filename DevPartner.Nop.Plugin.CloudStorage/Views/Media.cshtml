@@ -6,7 +6,7 @@
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.Media").Text;
     //active menu item (system name)
-    Html.SetActiveMenuItemSystemName("Media settings");
+    NopHtml.SetActiveMenuItemSystemName("Media settings");
 }
 @using (Html.BeginForm("Media", "MiscCloudStorage", FormMethod.Post))
 {

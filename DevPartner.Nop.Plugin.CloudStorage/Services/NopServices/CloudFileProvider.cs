@@ -6,7 +6,7 @@ using System;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace DevPartner.Nop.Plugin.CloudStorage.Services.Nop
+namespace DevPartner.Nop.Plugin.CloudStorage.Services.NopServices
 {
     /// <summary>
     /// IO functions using cloud file system
@@ -14,10 +14,8 @@ namespace DevPartner.Nop.Plugin.CloudStorage.Services.Nop
     public class CloudFileProvider : NopFileProvider
     {
         #region Ctor
-        public CloudFileProvider(IWebHostEnvironment webHostEnvironment)
-            : base(webHostEnvironment)
+        public CloudFileProvider(IWebHostEnvironment webHostEnvironment) : base(webHostEnvironment)
         {
-
         }
         #endregion
 

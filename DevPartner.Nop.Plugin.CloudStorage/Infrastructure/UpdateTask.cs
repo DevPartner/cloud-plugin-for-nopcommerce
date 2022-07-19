@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using DevPartner.Nop.Plugin.CloudStorage.Cloud;
 using DevPartner.Nop.Plugin.CloudStorage.Domain;
 using DevPartner.Nop.Plugin.CloudStorage.Services;
+using DevPartner.Nop.Plugin.CloudStorage.Services.NopServices;
 using Nop.Services.ScheduleTasks;
 
 namespace DevPartner.Nop.Plugin.CloudStorage.Infrastructure

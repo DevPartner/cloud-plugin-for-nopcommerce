@@ -1,6 +1,5 @@
 ﻿using DevPartner.Nop.Plugin.CloudStorage.Cloud;
 using DevPartner.Nop.Plugin.CloudStorage.Extensions;
-using DevPartner.Nop.Plugin.CloudStorage.Nop.Services;
 using Microsoft.AspNetCore.Http;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
@@ -17,7 +16,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 
-namespace DevPartner.Nop.Plugin.CloudStorage.Services.Nop
+namespace DevPartner.Nop.Plugin.CloudStorage.Services.NopServices
 {
     public class CloudPictureService : PictureService
     {

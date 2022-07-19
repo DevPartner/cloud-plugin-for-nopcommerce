@@ -1,6 +1,6 @@
 ﻿using DevPartner.Nop.Plugin.CloudStorage.Cloud;
 using DevPartner.Nop.Plugin.CloudStorage.Services;
-using DevPartner.Nop.Plugin.CloudStorage.Services.Nop;
+using DevPartner.Nop.Plugin.CloudStorage.Services.NopServices;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -42,6 +42,39 @@ namespace DevPartner.Nop.Plugin.CloudStorage.Infrastructure
                 .AddScoped<CloudFileProvider>();
             services.AddScoped<IPictureService, CloudPictureService>()
                 .AddScoped<CloudPictureService>();
+
+            /*
+
+            1. static files requests. try simple approuce Strathweb.AspNetCore.AzureBlobFileProvider
+            foreach (var rule in rules)
+            app.UseStaticFiles(new StaticFileOptions()
+            {
+                FileProvider = _cloudProvidersFactory.Create(rule),
+                RequestPath = rule.RequestPath //"/files"
+            });
+
+            2.Saving images via PictureServices.How to add additioanal Process
+            services.AddCloud().
+                    .AddProvider<CloudFileProvider>()
+                                .AddProcessor<ResizeWebProcessor>()
+                                .AddProcessor<QualityWebProcessor>()
+                                .AddProcessor<AutoOrientWebProcessor>();
+	                .AddProvider<CloudDownloadsProvider>()
+                                .AddProcessor<ZipProcessor>();
+
+            3.GetPicturesURL event
+               	.AddProcessor<GenerateThubnailsProcessor>(); // default nopCommerce implementatin
+   	            .AddProcessor<WatermarkProcessor>();
+   	            .AddProcessor<ConvertWebPProcessor>();
+
+	        //Using microservises
+   	        .AddProcessor<URLForExternalserver>(string urlFormat="{0}");
+
+            3. Saving Files event
+   	            .AddProcessor<ZipProcessor>(); 
+
+            3. Get Files event
+   	            .AddProcessor<UnZipProcessor>(); */
 
             //Factories
             services.AddScoped<CloudProviderFactory>();

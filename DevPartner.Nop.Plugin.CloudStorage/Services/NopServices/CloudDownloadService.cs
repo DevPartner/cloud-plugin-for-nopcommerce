@@ -12,7 +12,7 @@ using Nop.Data;
 using Nop.Services.Logging;
 using Nop.Services.Media;
 
-namespace DevPartner.Nop.Plugin.CloudStorage.Services.Nop
+namespace DevPartner.Nop.Plugin.CloudStorage.Services.NopServices
 {
     public class CloudDownloadService : DownloadService
     {

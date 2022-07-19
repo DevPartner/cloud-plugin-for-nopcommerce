@@ -2,6 +2,7 @@
 using DevPartner.Nop.Plugin.CloudStorage.Domain;
 using DevPartner.Nop.Plugin.CloudStorage.Models;
 using DevPartner.Nop.Plugin.CloudStorage.Services;
+using DevPartner.Nop.Plugin.CloudStorage.Services.NopServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
