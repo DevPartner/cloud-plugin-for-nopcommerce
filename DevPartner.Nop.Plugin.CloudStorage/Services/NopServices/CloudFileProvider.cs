@@ -1,8 +1,10 @@
 ﻿using DevPartner.Nop.Plugin.CloudStorage.Cloud;
+using DevPartner.Nop.Plugin.CloudStorage.Configuration;
 using DevPartner.Nop.Plugin.CloudStorage.Extensions;
 using Microsoft.AspNetCore.Hosting;
 using Nop.Core.Infrastructure;
 using System;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -13,9 +15,35 @@ namespace DevPartner.Nop.Plugin.CloudStorage.Services.NopServices
     /// </summary>
     public class CloudFileProvider : NopFileProvider
     {
-        #region Ctor
-        public CloudFileProvider(IWebHostEnvironment webHostEnvironment) : base(webHostEnvironment)
+        #region Properties
+        /// <summary>
+        /// A value indicating cloud config rules
+        /// </summary>
+        private CloudConfig _cloudConfig { get; set; }
+        #endregion
+
+        #region Utils
+        protected string GetCloudPath(string fileOrDirPath)
         {
+            if (!CloudHelper.FileProvider.IsNull())
+            {
+                var rule = _cloudConfig.FileProviderRuleConfig.FirstOrDefault(x => Regex.IsMatch(fileOrDirPath, x.Pattern));
+                if (rule != null)
+                {
+                    var path = Regex.Replace(fileOrDirPath, rule.Pattern, rule.Replace);
+                    return path;
+                }
+            }
+            return null;
+        }
+        #endregion
+
+        #region Ctor
+        public CloudFileProvider(IWebHostEnvironment webHostEnvironment,
+            CloudConfig cloudConfig
+            ) : base(webHostEnvironment)
+        {
+            _cloudConfig = cloudConfig;
         }
         #endregion
 
@@ -27,16 +55,13 @@ namespace DevPartner.Nop.Plugin.CloudStorage.Services.NopServices
         /// <param name="bytes">The bytes to write to the file</param>
         public override async Task WriteAllBytesAsync(string filePath, byte[] bytes)
         {
-            var imagesPath = base.Combine(WebRootPath, "\\images");
-            if (!CloudHelper.FileProvider.IsNull() && Regex.IsMatch(filePath, pattern: "\\\\images((\\\\)|$)", RegexOptions.CultureInvariant))
+            var path = GetCloudPath(filePath);
+            if (!String.IsNullOrEmpty(path))
             {
-                var path = filePath.Substring(imagesPath.Length);
                 await CloudHelper.FileProvider.WriteAllBytesAsync(path, bytes);
+                return;
             }
-            else
-            {
-                await base.WriteAllBytesAsync(filePath, bytes);
-            }
+            await base.WriteAllBytesAsync(filePath, bytes);
         }
 
         /// <summary>
@@ -46,30 +71,24 @@ namespace DevPartner.Nop.Plugin.CloudStorage.Services.NopServices
         /// <param name="bytes">The bytes to write to the file</param>
         public override async Task<byte[]> ReadAllBytesAsync(string filePath)
         {
-            var imagesPath = base.Combine(WebRootPath, "\\images");
-            if (!CloudHelper.FileProvider.IsNull() && Regex.IsMatch(filePath, pattern: "\\\\images((\\\\)|$)", RegexOptions.CultureInvariant))
+            var path = GetCloudPath(filePath);
+            if (!String.IsNullOrEmpty(path))
             {
-                var path = filePath.Substring(imagesPath.Length);
                 return await CloudHelper.FileProvider.ReadAllBytesAsync(path);
             }
-            else
-            {
-                return await base.ReadAllBytesAsync(filePath);
-            }
+
+            return await base.ReadAllBytesAsync(filePath);
         }
 
         public override void DeleteFile(string filePath)
         {
-            var imagesPath = base.Combine(WebRootPath, "\\images");
-            if (!CloudHelper.FileProvider.IsNull() && Regex.IsMatch(filePath, pattern: "\\\\images((\\\\)|$)", RegexOptions.CultureInvariant))
+            var path = GetCloudPath(filePath);
+            if (!String.IsNullOrEmpty(path))
             {
-                var path = filePath.Substring(imagesPath.Length);
                 CloudHelper.FileProvider.DeleteFile(path);
+                return;
             }
-            else
-            {
-                base.DeleteFile(filePath);
-            }
+            base.DeleteFile(filePath);
         }
 
 
@@ -93,16 +112,13 @@ namespace DevPartner.Nop.Plugin.CloudStorage.Services.NopServices
         /// </returns>
         public override string[] GetFiles(string directoryPath, string searchPattern = "", bool topDirectoryOnly = true)
         {
-            var imagesPath = base.Combine(WebRootPath, "\\images");
-            if (!CloudHelper.FileProvider.IsNull() && Regex.IsMatch(directoryPath, pattern: "\\\\images((\\\\)|$)", RegexOptions.CultureInvariant))
+            var path = GetCloudPath(directoryPath);
+            if (!String.IsNullOrEmpty(path))
             {
-                var path = directoryPath.Substring(imagesPath.Length);
                 return CloudHelper.FileProvider.GetFiles(path, searchPattern, topDirectoryOnly);
             }
-            else
-            {
-                return base.GetFiles(directoryPath, searchPattern, topDirectoryOnly);
-            }
+
+            return base.GetFiles(directoryPath, searchPattern, topDirectoryOnly);
         }
 
         /// <summary>
@@ -129,16 +145,14 @@ namespace DevPartner.Nop.Plugin.CloudStorage.Services.NopServices
         /// <param name="path">The directory to create</param>
         public override void CreateDirectory(string directoryPath)
         {
-            var imagesPath = base.Combine(WebRootPath, "\\images");
-            if (!CloudHelper.FileProvider.IsNull() && Regex.IsMatch(directoryPath, pattern: "\\\\images((\\\\)|$)", RegexOptions.CultureInvariant))
+            var path = GetCloudPath(directoryPath);
+            if (!String.IsNullOrEmpty(path))
             {
-                var path = directoryPath.Substring(imagesPath.Length);
                 CloudHelper.FileProvider.CreateDirectory(path);
+                return;
             }
-            else
-            {
-                base.CreateDirectory(directoryPath);
-            }
+
+            base.CreateDirectory(directoryPath);
         }
 
 
@@ -153,16 +167,13 @@ namespace DevPartner.Nop.Plugin.CloudStorage.Services.NopServices
         /// </returns>
         public override bool FileExists(string filePath)
         {
-            var imagesPath = base.Combine(WebRootPath, "\\images");
-            if (!CloudHelper.FileProvider.IsNull() && Regex.IsMatch(filePath, pattern: "\\\\images((\\\\)|$)", RegexOptions.CultureInvariant))
+            var path = GetCloudPath(filePath);
+            if (!String.IsNullOrEmpty(path))
             {
-                var path = filePath.Substring(imagesPath.Length);
                 return CloudHelper.FileProvider.FileExists(path);
             }
-            else
-            {
-                return base.FileExists(filePath);
-            }
+
+            return base.FileExists(filePath);
         }
 
         /// <summary>
@@ -172,135 +183,111 @@ namespace DevPartner.Nop.Plugin.CloudStorage.Services.NopServices
         /// <returns>The virtual path. E.g. "~/bin"</returns>
         public override string GetVirtualPath(string path)
         {
-            var imagesPath = base.Combine(WebRootPath, "\\images");
-            if (!CloudHelper.FileProvider.IsNull() && Regex.IsMatch(path, pattern: "\\\\images((\\\\)|$)", RegexOptions.CultureInvariant))
+            var cloudPath = GetCloudPath(path);
+            if (!String.IsNullOrEmpty(cloudPath))
             {
-                var filePath = path.Substring(imagesPath.Length);
-                return CloudHelper.FileProvider.GetVirtualPath(filePath);
+                return CloudHelper.FileProvider.GetVirtualPath(cloudPath);
             }
-            else
-            {
-                return base.GetVirtualPath(path);
-            }
+
+            return base.GetVirtualPath(path);
         }
 
         public new void DeleteDirectory(string path)
         {
-            var imagesPath = base.Combine(WebRootPath, "\\images");
-            if (!CloudHelper.FileProvider.IsNull() && Regex.IsMatch(path, pattern: "\\\\images((\\\\)|$)", RegexOptions.CultureInvariant))
+            var cloudPath = GetCloudPath(path);
+            if (!String.IsNullOrEmpty(cloudPath))
             {
-                var filePath = path.Substring(imagesPath.Length);
-                CloudHelper.FileProvider.DeleteDirectory(filePath);
+                CloudHelper.FileProvider.DeleteDirectory(cloudPath);
+                return;
             }
-            else
-            {
-                base.DeleteDirectory(path);
-            }
+            base.DeleteDirectory(path);
         }
 
         public new bool DirectoryExists(string path)
         {
-            var imagesPath = base.Combine(WebRootPath, "\\images");
-            if (!CloudHelper.FileProvider.IsNull() && Regex.IsMatch(path, pattern: "\\\\images((\\\\)|$)", RegexOptions.CultureInvariant))
+            var cloudPath = GetCloudPath(path);
+            if (!String.IsNullOrEmpty(cloudPath))
             {
-                var filePath = path.Substring(imagesPath.Length);
-                return CloudHelper.FileProvider.DirectoryExists(filePath);
+                return CloudHelper.FileProvider.DirectoryExists(cloudPath);
             }
-            else
-            {
-                return base.DirectoryExists(path);
-            }
+
+            return base.DirectoryExists(path);
         }
 
         public override void FileCopy(string sourceFileName, string destFileName, bool overwrite = false)
         {
-            var imagesPath = base.Combine(WebRootPath, "\\images");
-            if (!CloudHelper.FileProvider.IsNull() && Regex.IsMatch(sourceFileName, pattern: "\\\\images((\\\\)|$)", RegexOptions.CultureInvariant))
+            var sourceCloudPath = GetCloudPath(sourceFileName);
+            if (!String.IsNullOrEmpty(sourceCloudPath))
             {
-                var filePath = sourceFileName.Substring(imagesPath.Length);
-                var destFilePath = destFileName;
-                if (Regex.IsMatch(destFilePath, pattern: "\\\\images((\\\\)|$)", RegexOptions.CultureInvariant))
-                    destFilePath = destFileName.Substring(imagesPath.Length);
-                CloudHelper.FileProvider.FileCopy(filePath, destFilePath, overwrite);
+                var destCloudPath = GetCloudPath(destFileName);
+                if (!String.IsNullOrEmpty(destCloudPath))
+                {
+                    CloudHelper.FileProvider.FileCopy(sourceCloudPath, destCloudPath, overwrite);
+                    return;
+                }
             }
-            else
-            {
-                base.FileCopy(sourceFileName, destFileName, overwrite);
-            }
+
+            base.FileCopy(sourceFileName, destFileName, overwrite);
         }
 
         public override long FileLength(string path)
         {
-            var imagesPath = base.Combine(WebRootPath, "\\images");
-            if (!CloudHelper.FileProvider.IsNull() && Regex.IsMatch(path, pattern: "\\\\images((\\\\)|$)", RegexOptions.CultureInvariant))
+            var сloudPath = GetCloudPath(path);
+            if (!String.IsNullOrEmpty(сloudPath))
             {
-                var filePath = path.Substring(imagesPath.Length);
+                return CloudHelper.FileProvider.FileLength(сloudPath);
+            }
 
-                return CloudHelper.FileProvider.FileLength(filePath);
-            }
-            else
-            {
-                return base.FileLength(path);
-            }
+            return base.FileLength(path);
         }
 
         public override void FileMove(string sourceFileName, string destFileName)
         {
-            var imagesPath = base.Combine(WebRootPath, "\\images");
-            if (!CloudHelper.FileProvider.IsNull() && Regex.IsMatch(sourceFileName, pattern: "\\\\images((\\\\)|$)", RegexOptions.CultureInvariant))
+            var sourceCloudPath = GetCloudPath(sourceFileName);
+            if (!String.IsNullOrEmpty(sourceCloudPath))
             {
-                var filePath = sourceFileName.Substring(imagesPath.Length);
-                var destFilePath = destFileName;
-                if (Regex.IsMatch(destFilePath, pattern: "\\\\images((\\\\)|$)", RegexOptions.CultureInvariant))
-                    destFilePath = destFileName.Substring(imagesPath.Length);
-                CloudHelper.FileProvider.FileMove(filePath, destFilePath);
+                var destCloudPath = GetCloudPath(destFileName);
+                if (!String.IsNullOrEmpty(destCloudPath))
+                {
+                    CloudHelper.FileProvider.FileMove(sourceCloudPath, destCloudPath);
+                    return;
+                }
             }
-            else
-            {
-                base.FileMove(sourceFileName, destFileName);
-            }
+
+            base.FileMove(sourceFileName, destFileName);
         }
 
         public override string[] GetDirectories(string path, string searchPattern = "", bool topDirectoryOnly = true)
         {
-            var imagesPath = base.Combine(WebRootPath, "\\images");
-            if (!CloudHelper.FileProvider.IsNull() && Regex.IsMatch(path, pattern: "\\\\images((\\\\)|$)", RegexOptions.CultureInvariant))
+            var сloudPath = GetCloudPath(path);
+            if (!String.IsNullOrEmpty(сloudPath))
             {
-                var filePath = path.Substring(imagesPath.Length);
-                return CloudHelper.FileProvider.GetDirectories(filePath, searchPattern, topDirectoryOnly);
+                return CloudHelper.FileProvider.GetDirectories(сloudPath, searchPattern, topDirectoryOnly);
             }
-            else
-            {
-                return base.GetDirectories(path, searchPattern, topDirectoryOnly);
-            }
+
+            return base.GetDirectories(path, searchPattern, topDirectoryOnly);
         }
         public override DateTime GetLastWriteTime(string path)
         {
-            var imagesPath = base.Combine(WebRootPath, "\\images");
-            if (!CloudHelper.FileProvider.IsNull() && Regex.IsMatch(path, pattern: "\\\\images((\\\\)|$)", RegexOptions.CultureInvariant))
+            var сloudPath = GetCloudPath(path);
+            if (!String.IsNullOrEmpty(сloudPath))
             {
-                var filePath = path.Substring(imagesPath.Length);
-                return CloudHelper.FileProvider.GetLastWriteTime(filePath);
+                return CloudHelper.FileProvider.GetLastWriteTime(сloudPath);
             }
-            else
-            {
-                return base.GetLastWriteTime(path);
-            }
+
+            return base.GetLastWriteTime(path);
         }
 
 
         public override string GetParentDirectory(string directoryPath)
         {
-            var imagesPath = base.Combine(WebRootPath, "\\images");
-            if (!CloudHelper.FileProvider.IsNull() && Regex.IsMatch(directoryPath, pattern: "\\\\images((\\\\)|$)", RegexOptions.CultureInvariant))
+            var сloudPath = GetCloudPath(directoryPath);
+            if (!String.IsNullOrEmpty(сloudPath))
             {
-                var filePath = directoryPath.Substring(imagesPath.Length);
-                return CloudHelper.FileProvider.GetParentDirectory(filePath);
+                return CloudHelper.FileProvider.GetParentDirectory(сloudPath);
             }
-            else
-            {
-                return base.GetParentDirectory(directoryPath);
-            }
+
+            return base.GetParentDirectory(directoryPath);
         }
 
         /*

@@ -1,3 +1,10 @@
 ﻿{
-  "UseDPImportManager": "true"
+  "UseDPImportManager": "true",
+  "CloudFileProviderRules": [
+    {
+      "name": "Move Images",
+      "match": "\images((\\)|$)",
+      "replace": ""
+    }
+  ]
 }

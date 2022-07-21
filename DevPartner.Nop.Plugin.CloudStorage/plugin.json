@@ -2,7 +2,7 @@
   "Group": "Dev-Partner",
   "FriendlyName": "DevPartner Cloud Storage",
   "SystemName": "DevPartner.CloudStorage",
-  "Version": "2.8",
+  "Version": "2.9",
   "SupportedVersions": [ "4.50" ],
   "Author": "Dev-Partner.biz",
   "DisplayOrder": 2,
