@@ -1,6 +1,6 @@
-﻿using System;
+﻿using DevPartner.Nop.Plugin.CloudStorage.Domain;
+using System;
 using System.Threading.Tasks;
-using DevPartner.Nop.Plugin.CloudStorage.Domain;
 
 namespace DevPartner.Nop.Plugin.CloudStorage.Cloud
 {

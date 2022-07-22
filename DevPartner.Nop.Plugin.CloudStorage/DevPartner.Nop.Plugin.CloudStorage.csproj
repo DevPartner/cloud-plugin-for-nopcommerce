@@ -48,7 +48,6 @@
   <ItemGroup>
     <Compile Remove="Cloud\FileCloudStorageProvider.cs" />
     <Compile Remove="Controllers\DPRoxyFilemanController.cs" />
-    <Compile Remove="Data\PictureMap.cs" />
     <Compile Remove="Domain\PictureExt.cs" />
     <Compile Remove="Extensions\EnumerableExtensions.cs" />
     <Compile Remove="Extensions\RepositoryDownload.cs" />

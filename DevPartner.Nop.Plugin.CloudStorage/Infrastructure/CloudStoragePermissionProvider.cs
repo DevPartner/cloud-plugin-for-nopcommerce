@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using Nop.Core.Domain.Customers;
+﻿using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Security;
 using Nop.Services.Security;
+using System.Collections.Generic;
 
 namespace DevPartner.Nop.Plugin.CloudStorage.Infrastructure
 {

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 
 namespace DevPartner.Nop.Plugin.CloudStorage.Extensions
 {

@@ -1,9 +1,11 @@
 ﻿using DevPartner.Nop.Plugin.CloudStorage.Cloud;
+using DevPartner.Nop.Plugin.CloudStorage.Configuration;
 using DevPartner.Nop.Plugin.CloudStorage.Services;
 using DevPartner.Nop.Plugin.CloudStorage.Services.NopServices;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
 using Nop.Services.Media;
 
@@ -83,7 +85,8 @@ namespace DevPartner.Nop.Plugin.CloudStorage.Infrastructure
             //DataLayout Services
             services.AddScoped<MovingItemService>();
 
-
+            //Config
+            services.AddSingleton(x => Singleton<AppSettings>.Instance.Get<CloudConfig>());
         }
 
         /// <summary>
@@ -99,6 +102,5 @@ namespace DevPartner.Nop.Plugin.CloudStorage.Infrastructure
         /// Gets order of this startup configuration implementation
         /// </summary>
         public int Order => 1;
-
     }
 }

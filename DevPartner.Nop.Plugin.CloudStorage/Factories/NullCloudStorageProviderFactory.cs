@@ -1,7 +1,7 @@
-﻿using System.Threading.Tasks;
-using DevPartner.Nop.Plugin.CloudStorage.Attributes;
+﻿using DevPartner.Nop.Plugin.CloudStorage.Attributes;
 using DevPartner.Nop.Plugin.CloudStorage.Domain;
 using Microsoft.AspNetCore.Http;
+using System.Threading.Tasks;
 
 namespace DevPartner.Nop.Plugin.CloudStorage.Cloud
 {

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DevPartner.Nop.Plugin.CloudStorage.Domain
+﻿namespace DevPartner.Nop.Plugin.CloudStorage.Domain
 {
     public class DPCloudDefaults
     {
@@ -11,10 +7,8 @@ namespace DevPartner.Nop.Plugin.CloudStorage.Domain
             "DevPartner.Nop.Plugin.CloudStorage.Infrastructure.UpdateTask";
 
         public const string NULL_CLOUD_PROVIDER_NAME = "nopCommerce";
-        public const string PICTURE_PROVIDER_TYPE_NAME = "PictureStoreType";
-        public const string THUMB_PICTURE_PROVIDER_TYPE_NAME = "ThumbPictureStoreType";
         public const string DOWNLOAD_PROVIDER_TYPE_NAME = "DownloadStoreType";
-        public const string CONTENT_PROVIDER_TYPE_NAME = "ContentStoreType";
+        public const string FILE_PROVIDER_TYPE_NAME = "FileStoreType";
         /// <summary>
         /// Gets a path to the downloads
         /// </summary>

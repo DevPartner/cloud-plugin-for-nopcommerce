@@ -29,10 +29,8 @@ namespace DevPartner.Nop.Plugin.CloudStorage.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly MovingItemService _movingService;
         private readonly CloudDownloadService _downloadService;
-        /*        private readonly StoreContentService _storeContentService;*/
         private readonly IWebHelper _webHelper;
         private readonly CloudProviderFactory _cloudProviderFactory;
-        private readonly ISettingModelFactory _settingModelFactory;
         private readonly INotificationService _notificationService;
         private readonly CloudPictureService _pictureService;
         #endregion
@@ -56,11 +54,9 @@ namespace DevPartner.Nop.Plugin.CloudStorage.Controllers
             _localizationService = localizationService;
             _pictureService = pictureService;
             _downloadService = downloadService;
-            /*_storeContentService = storeContentService;*/
             _movingService = movingService;
             _webHelper = webHelper;
             _cloudProviderFactory = cloudProviderFactory;
-            _settingModelFactory = settingModelFactory;
             _notificationService = notificationService;
         }
         #endregion
@@ -78,16 +74,12 @@ namespace DevPartner.Nop.Plugin.CloudStorage.Controllers
             var pluginSetting = await _settingService.LoadSettingAsync<DevPartnerCloudStorageSetting>();
             var model = new ConfigurationModel
             {
-                PictureStoreType = pluginSetting.PictureStoreType,
-                //ThumbPictureStoreType = pluginSetting.ThumbPictureStoreType,
                 DownloadStoreType = pluginSetting.DownloadStoreType,
-                ContentStoreType = pluginSetting.ContentStoreType,
+                FileStoreType = pluginSetting.FileStoreType,
                 AlwaysShowMainImage = pluginSetting.AlwaysShowMainImage,
                 CheckIfImageExist = pluginSetting.CheckIfImageExist,
                 StoreImageInDb = pluginSetting.StoreImageInDb,
                 ArchiveDownloads = pluginSetting.ArchiveDownloads,
-                LicenseKey = pluginSetting.LicenseKey,
-                LicenseValid = true
             };
 
             return View("~/Plugins/DevPartner.CloudStorage/Views/Configure.cshtml", model);
@@ -109,17 +101,11 @@ namespace DevPartner.Nop.Plugin.CloudStorage.Controllers
             pluginSetting.CheckIfImageExist = model.CheckIfImageExist;
             pluginSetting.ArchiveDownloads = model.ArchiveDownloads;
             pluginSetting.StoreImageInDb = model.StoreImageInDb;
-            if (pluginSetting.PictureStoreType != model.PictureStoreType)
-            {
-                SaveProviderSettings(DPCloudDefaults.PICTURE_PROVIDER_TYPE_NAME, model.PictureStoreType, form);
-                if (!ValidateProvider(DPCloudDefaults.PICTURE_PROVIDER_TYPE_NAME, model.PictureStoreType))
-                    return await Configure();
-            }
             
-            if (pluginSetting.ContentStoreType != model.ContentStoreType)
+            if (pluginSetting.FileStoreType != model.FileStoreType)
             {
-                SaveProviderSettings(DPCloudDefaults.CONTENT_PROVIDER_TYPE_NAME, model.ContentStoreType, form);
-                if (!ValidateProvider(DPCloudDefaults.CONTENT_PROVIDER_TYPE_NAME, model.ContentStoreType))
+                SaveProviderSettings(DPCloudDefaults.FILE_PROVIDER_TYPE_NAME, model.FileStoreType, form);
+                if (!ValidateProvider(DPCloudDefaults.FILE_PROVIDER_TYPE_NAME, model.FileStoreType))
                     return await Configure();
             }
             if (pluginSetting.DownloadStoreType != model.DownloadStoreType)
@@ -128,18 +114,15 @@ namespace DevPartner.Nop.Plugin.CloudStorage.Controllers
                 if (!ValidateProvider(DPCloudDefaults.DOWNLOAD_PROVIDER_TYPE_NAME, model.DownloadStoreType))
                     return await Configure();
             }
-            await MovePictureStorageFilesAsync(model, pluginSetting);
             await MoveDownloadStorageFilesAsync(model, pluginSetting);
 
-            pluginSetting.PictureStoreType = model.PictureStoreType;
             pluginSetting.DownloadStoreType = model.DownloadStoreType;
-            pluginSetting.ContentStoreType = model.ContentStoreType;
-            pluginSetting.LicenseKey = model.LicenseKey;
+            pluginSetting.FileStoreType = model.FileStoreType;
 
             await _settingService.SaveSettingAsync(pluginSetting);
 
             CloudHelper.FileProvider = await _cloudProviderFactory
-                        .Create(DPCloudDefaults.PICTURE_PROVIDER_TYPE_NAME);
+                        .Create(DPCloudDefaults.FILE_PROVIDER_TYPE_NAME);
             CloudHelper.DownloadProvider = await _cloudProviderFactory
                     .Create(DPCloudDefaults.DOWNLOAD_PROVIDER_TYPE_NAME);
 
@@ -169,8 +152,6 @@ namespace DevPartner.Nop.Plugin.CloudStorage.Controllers
         public async Task<IActionResult> ChangePictureStorage(ConfigurationModel model)
         {
             var pluginSetting = await _settingService.LoadSettingAsync<DevPartnerCloudStorageSetting>();
-            await MovePictureStorageFilesAsync(model, pluginSetting);
-            pluginSetting.PictureStoreType = model.PictureStoreType;
             await _settingService.SaveSettingAsync(pluginSetting);
             _webHelper.RestartAppDomain();
             //_movingService.StartWorklflow();
@@ -207,7 +188,7 @@ namespace DevPartner.Nop.Plugin.CloudStorage.Controllers
         {
 
             /*if (_movingFileService.AllItemsMoved())
-                _storeContentService.StoreType = model.ContentStoreType;
+                _storeContentService.StoreType = model.FileStoreType;
             else
                 ErrorNotification(await _localizationService.GetResourceAsync("DevPartner.CloudStorage.ConfigureModel.FileMovingInProgress"));
 
@@ -422,25 +403,6 @@ namespace DevPartner.Nop.Plugin.CloudStorage.Controllers
             return true;
         }
 
-        private async Task MovePictureStorageFilesAsync(ConfigurationModel model, DevPartnerCloudStorageSetting pluginSetting)
-        {
-            if (_movingService.AllItemsMoved(MovingItemTypes.Picture))
-            {
-                if (!await _pictureService.IsStoreInDbAsync() && pluginSetting.PictureStoreType == DPCloudDefaults.NULL_CLOUD_PROVIDER_NAME)
-                {
-                    _notificationService.ErrorNotification(await _localizationService.GetResourceAsync("DevPartner.CloudStorage.ConfigureModel.ErrorNotification.StoreInDB"));
-                    return;
-                }
-                if (pluginSetting.PictureStoreType != model.PictureStoreType)
-                {
-                    var picturesIds = await _pictureService.GetPicturesIdsAsync();
-                    await _movingService.SaveAsync(picturesIds, MovingItemTypes.Picture, pluginSetting.PictureStoreType);
-                }
-            }
-            else
-                _notificationService.ErrorNotification(
-                        await _localizationService.GetResourceAsync("DevPartner.CloudStorage.ConfigureModel.PictureMovingInProgress"));
-        }
 
         private async Task MoveDownloadStorageFilesAsync(ConfigurationModel model, DevPartnerCloudStorageSetting pluginSetting)
         {
@@ -463,10 +425,10 @@ namespace DevPartner.Nop.Plugin.CloudStorage.Controllers
         {
             /*if (_movingService.AllItemsMoved(MovingItemTypes.File))
             {
-                if (pluginSetting.ContentStoreType != model.ContentStoreType)
+                if (pluginSetting.FileStoreType != model.FileStoreType)
                 {
                     var files = _storeContentService.ListDirTree();
-                    _movingService.Save(files, MovingItemTypes.File, pluginSetting.ContentStoreType);
+                    _movingService.Save(files, MovingItemTypes.File, pluginSetting.FileStoreType);
                 }
             }
             else*/

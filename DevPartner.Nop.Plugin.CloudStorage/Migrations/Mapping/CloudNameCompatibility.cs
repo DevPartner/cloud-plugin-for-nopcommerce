@@ -3,7 +3,7 @@ using Nop.Data.Mapping;
 using System;
 using System.Collections.Generic;
 
-namespace DevPartner.Nop.Plugin.CloudStorage.Data.Mapping
+namespace DevPartner.Nop.Plugin.CloudStorage.Migrations.Mapping
 {
     public class CloudNameCompatibility : INameCompatibility
     {

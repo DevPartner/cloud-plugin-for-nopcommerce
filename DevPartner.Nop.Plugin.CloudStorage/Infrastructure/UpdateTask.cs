@@ -1,10 +1,10 @@
-﻿using System;
-using System.Threading.Tasks;
-using DevPartner.Nop.Plugin.CloudStorage.Cloud;
+﻿using DevPartner.Nop.Plugin.CloudStorage.Cloud;
 using DevPartner.Nop.Plugin.CloudStorage.Domain;
 using DevPartner.Nop.Plugin.CloudStorage.Services;
 using DevPartner.Nop.Plugin.CloudStorage.Services.NopServices;
 using Nop.Services.ScheduleTasks;
+using System;
+using System.Threading.Tasks;
 
 namespace DevPartner.Nop.Plugin.CloudStorage.Infrastructure
 {
@@ -36,7 +36,7 @@ namespace DevPartner.Nop.Plugin.CloudStorage.Infrastructure
             {
                 try
                 {
-                    var provider = await _providerFactory.Create(DPCloudDefaults.PICTURE_PROVIDER_TYPE_NAME, movingItem.OldProviderSystemName);
+                    var provider = await _providerFactory.Create(DPCloudDefaults.FILE_PROVIDER_TYPE_NAME, movingItem.OldProviderSystemName);
                     await _cloudPictureService.MovePictureAsync(await _cloudPictureService.GetPictureByIdAsync(movingItem.EntityId.Value), provider);
                     await _movingItemService.UpdateStatusAsync(movingItem, MovingItemStatus.Succeed);
                 }
@@ -76,7 +76,5 @@ namespace DevPartner.Nop.Plugin.CloudStorage.Infrastructure
                 }
             }*/
         }
-
-       
     }
 }

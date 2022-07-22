@@ -12,11 +12,11 @@
  */
 #endregion
 
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Nop.Core.Domain.ScheduleTasks;
 using Nop.Core.Infrastructure;
 using Nop.Services.ScheduleTasks;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 
 namespace DevPartner.Nop.Plugin.CloudStorage.Extensions

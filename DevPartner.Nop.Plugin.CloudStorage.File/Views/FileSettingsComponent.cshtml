@@ -1,0 +1,15 @@
+﻿@using System.Text.Encodings.Web
+@model DevPartner.Nop.Plugin.CloudStorage.File.Models.SettingsModel
+@{
+    var nameDirectoryForFiles = @Model.ProviderType + ".File." + "DirectoryForFiles";
+}
+
+<div class="form-group row">
+    <div class="col-md-3">
+        <nop-label asp-for="DirectoryForFiles" />
+    </div>
+    <div class="col-md-9">
+        <input asp-for="DirectoryForFiles" name="@nameDirectoryForFiles" class="form-control text-box single-line" />
+        <span asp-validation-for="DirectoryForFiles"></span>
+    </div>
+</div>

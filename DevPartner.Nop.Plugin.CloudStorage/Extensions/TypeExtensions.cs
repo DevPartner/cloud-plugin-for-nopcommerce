@@ -1,7 +1,7 @@
-﻿using System;
+﻿using DevPartner.Nop.Plugin.CloudStorage.Attributes;
+using System;
 using System.Linq;
 using System.Reflection;
-using DevPartner.Nop.Plugin.CloudStorage.Attributes;
 
 namespace DevPartner.Nop.Plugin.CloudStorage.Extensions
 {

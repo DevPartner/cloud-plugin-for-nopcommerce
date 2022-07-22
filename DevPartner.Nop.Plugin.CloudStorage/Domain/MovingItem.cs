@@ -1,5 +1,5 @@
-﻿using System;
-using Nop.Core;
+﻿using Nop.Core;
+using System;
 
 namespace DevPartner.Nop.Plugin.CloudStorage.Domain
 {

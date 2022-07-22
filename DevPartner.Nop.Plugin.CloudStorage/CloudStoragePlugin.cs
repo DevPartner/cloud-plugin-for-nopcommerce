@@ -61,18 +61,17 @@ namespace DevPartner.Nop.Plugin.CloudStorage
             //locales
             await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
             {
-                ["DevPartner.CloudStorage.ConfigureModel.Note.PictureStoreType"] = "NOTE: Do not forget to backup your database and files before changing this option",
-                //["DevPartner.CloudStorage.ConfigureModel.Note.ThumbPictureStoreType"] = "NOTE: Do not forget to backup your database before changing this option",
+//                ["DevPartner.CloudStorage.ConfigureModel.Note.PictureStoreType"] = "NOTE: Do not forget to backup your database and files before changing this option",
                 ["DevPartner.CloudStorage.ConfigureModel.Note.DownloadStoreType"] = "NOTE: Do not forget to backup your database before changing this option",
-                ["DevPartner.CloudStorage.ConfigureModel.Note.ContentStoreType"] = "NOTE: Do not forget to backup your files before changing this option",
+                ["DevPartner.CloudStorage.ConfigureModel.Note.FileStoreType"] = "NOTE: Do not forget to backup your files before changing this option",
                 ["DevPartner.CloudStorage.ForumSupport"] = "Forum Support",
                 ["DevPartner.CloudStorage.ConfigureModel.ButtonSave"] = "Save",
-                ["DevPartner.CloudStorage.ConfigureModel.PictureStoreType"] = "Pictures are stored into...",
-                ["DevPartner.CloudStorage.ConfigureModel.PictureStoreType.Hint"] = "Chose pictures storage type",
-                ["DevPartner.CloudStorage.ConfigureModel.DownloadStoreType"] = "Files are stored into...",
-                ["DevPartner.CloudStorage.ConfigureModel.DownloadStoreType.Hint"] = "Chose files storage type",
-                ["DevPartner.CloudStorage.ConfigureModel.ContentStoreType"] = "Content are stored into...",
-                ["DevPartner.CloudStorage.ConfigureModel.ContentStoreType.Hint"] = "Chose content(js, css, images) storage type",
+//                ["DevPartner.CloudStorage.ConfigureModel.PictureStoreType"] = "Pictures are stored into...",
+//                ["DevPartner.CloudStorage.ConfigureModel.PictureStoreType.Hint"] = "Chose pictures storage type",
+                ["DevPartner.CloudStorage.ConfigureModel.DownloadStoreType"] = "Downloads are stored into...",
+                ["DevPartner.CloudStorage.ConfigureModel.DownloadStoreType.Hint"] = "Chose downloads storage type",
+                ["DevPartner.CloudStorage.ConfigureModel.FileStoreType"] = "Files are stored into...",
+                ["DevPartner.CloudStorage.ConfigureModel.FileStoreType.Hint"] = "Chose storage type for files(js, css, images). By default plugin works just with wwwroot\\images folder but you can extent FileProviderRuleConfig in App_Data\\appsettings.json and copy other folders",
                 ["DevPartner.CloudStorage.ConfigureModel.ChangeFilesStorage"] = "Files storage has been changed successfully.",
                 ["DevPartner.CloudStorage.ConfigureModel.ChangePicturesStorage"] = "Pictures storage has been changed successfully.",
                 ["DevPartner.CloudStorage.ConfigureModel.ChangeContentStorage"] = "Content storage has been changed successfully.",
@@ -93,12 +92,8 @@ namespace DevPartner.Nop.Plugin.CloudStorage
                 ["DevPartner.CloudStorage.ConfigureModel.Note.LicenseKey"] = "You can buy this product <a href='https://www.dev-partner.biz/nopcommerce-cloud-storage-azure-blobcdn-amazon-s3cloudfront-plugin'>here</a>",
                 ["DevPartner.CloudStorage.Configure.FailedToSave"] = "Failed to save",
                 ["DevPartner.CloudStorage.ConfigureModel.ErrorNotification.StoreInDB"] = "Please move your pictures to DB",
-                ["DevPartner.CloudStorage.FileProvider.CopyFileInvalisPath"] = "Cannot copy file - path doesn't exist",
-                ["DevPartner.CloudStorage.FileProvider.CopyFile"] = "Error copying file",
-                ["DevPartner.CloudStorage.FileProvider.DeleteFile"] = "Delete file",
-                ["DevPartner.CloudStorage.FileProvider.DeleteFileInvalidPath"] = "Cannot delete file - path doesn't exist",
-                ["DevPartner.Cloud.Configure.Settings"] = "Cloud Settings",
-                ["DevPartner.Cloud.Configure.Settings.BackToList"] = "back to cloud settings",
+                ["DevPartner.CloudStorage.Configure.Settings"] = "Cloud Settings",
+                ["DevPartner.CloudStorage.Configure.Settings.BackToList"] = "back to cloud settings",
                 ["DevPartner.CloudStorage.LogFilterModel.Log"] = "Cloud Log",
                 ["DevPartner.CloudStorage.LogFilterModel.Items"] = "Items to show",
                 ["DevPartner.CloudStorage.LogFilterModel.ShowPictures"] = "Show Pictures to move",
@@ -123,7 +118,6 @@ namespace DevPartner.Nop.Plugin.CloudStorage
                 ["DevPartner.CloudStorage.MovingItemModel.Status"] = "Status",
                 ["DevPartner.CloudStorage.MovingItemModel.CreatedOnUtc"] = "Created On",
                 ["DevPartner.CloudStorage.MovingItemModel.ChangedOnUtc"] = "Changed On",
-                ["DevPartner.CloudStorage.LicenseKey.Invalid"] = "Invalid license key for {0} ({1})"
             });
 
             //settings
@@ -133,9 +127,8 @@ namespace DevPartner.Nop.Plugin.CloudStorage
                 ArchiveDownloads = false,
                 CheckIfImageExist = false,
                 StoreImageInDb = false,
-                PictureStoreType = DPCloudDefaults.NULL_CLOUD_PROVIDER_NAME,
                 DownloadStoreType = DPCloudDefaults.NULL_CLOUD_PROVIDER_NAME,
-                ContentStoreType = DPCloudDefaults.NULL_CLOUD_PROVIDER_NAME,
+                FileStoreType = DPCloudDefaults.NULL_CLOUD_PROVIDER_NAME,
             };
 
             await _settingService.SaveSettingAsync(settings);

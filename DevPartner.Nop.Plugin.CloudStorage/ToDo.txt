@@ -1,5 +1,0 @@
-﻿http://codehelper.net/asp-net/azure-net-core-web-app-and-where-to-locate-static-files/ - 
-https://docs.microsoft.com/en-us/aspnet/core/fundamentals/file-providers?view=aspnetcore-3.1#compositefileprovider - combine providers???
-
-
-https://www.strathweb.com/2018/08/azure-blob-storage-ifileprovider-for-asp-net-core/ azure blob for specific folders!!!!

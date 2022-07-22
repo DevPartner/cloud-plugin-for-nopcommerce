@@ -13,8 +13,8 @@ using Nop.Services.Media;
 using Nop.Services.Seo;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DevPartner.Nop.Plugin.CloudStorage.Services.NopServices
 {

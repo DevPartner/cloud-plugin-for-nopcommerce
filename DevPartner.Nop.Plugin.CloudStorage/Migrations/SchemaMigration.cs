@@ -3,7 +3,7 @@ using FluentMigrator;
 using Nop.Data.Extensions;
 using Nop.Data.Migrations;
 
-namespace DevPartner.Nop.Plugin.CloudStorage.Data
+namespace DevPartner.Nop.Plugin.CloudStorage.Migrations
 {
     [NopMigration("2020/05/29 09:10:17:6455422", "DevPartner.CloudStorage schema", MigrationProcessType.Installation)]
     public class SchemaMigration : AutoReversingMigration

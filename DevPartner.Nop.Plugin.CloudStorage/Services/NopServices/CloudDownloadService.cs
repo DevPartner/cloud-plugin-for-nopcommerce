@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using DevPartner.Nop.Plugin.CloudStorage.Cloud;
+﻿using DevPartner.Nop.Plugin.CloudStorage.Cloud;
 using DevPartner.Nop.Plugin.CloudStorage.Domain;
 using DevPartner.Nop.Plugin.CloudStorage.Extensions;
 using Nop.Core.Domain.Media;
@@ -11,6 +6,11 @@ using Nop.Core.Infrastructure;
 using Nop.Data;
 using Nop.Services.Logging;
 using Nop.Services.Media;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace DevPartner.Nop.Plugin.CloudStorage.Services.NopServices
 {

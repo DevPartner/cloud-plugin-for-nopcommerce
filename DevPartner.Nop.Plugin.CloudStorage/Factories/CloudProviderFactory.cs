@@ -1,12 +1,12 @@
 ﻿
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using DevPartner.Nop.Plugin.CloudStorage.Domain;
 using DevPartner.Nop.Plugin.CloudStorage.Extensions;
 using Microsoft.AspNetCore.Http;
 using Nop.Core.Infrastructure;
 using Nop.Services.Configuration;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace DevPartner.Nop.Plugin.CloudStorage.Cloud
 {
