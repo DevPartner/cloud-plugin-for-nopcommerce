@@ -1,0 +1,15 @@
+﻿@model DevPartner.Nop.Plugin.CloudStorage.Amazon.Models.SettingsModel
+
+@{
+    var nameBucketName = @Model.ProviderType + ".Amazon.Bucket";
+}
+
+<div class="form-group row">
+    <div class="col-md-3">
+        <nop-label asp-for="@nameBucketName" />
+    </div>
+    <div class="col-md-9">
+        <input asp-for="@Model.BucketName" name="@nameBucketName" class="form-control" />
+        <span asp-validation-for="BucketName"></span>
+    </div>
+</div>

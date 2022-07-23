@@ -7,5 +7,5 @@
   "Author": "Dev-Partner.biz",
   "DisplayOrder": 3,
   "FileName": "DevPartner.Nop.Plugin.CloudStorage.File.dll",
-  "Description": "This plugin was implemented for a demo purposes. It allows you to use File for your downloads and pictures"
+  "Description": "This plugin was implemented for a demo purposes. It allows you to use FileSystem for your downloads and also change pictures directory"
 }

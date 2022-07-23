@@ -102,18 +102,14 @@ namespace DevPartner.Nop.Plugin.CloudStorage.Controllers
             pluginSetting.ArchiveDownloads = model.ArchiveDownloads;
             pluginSetting.StoreImageInDb = model.StoreImageInDb;
             
-            if (pluginSetting.FileStoreType != model.FileStoreType)
-            {
-                SaveProviderSettings(DPCloudDefaults.FILE_PROVIDER_TYPE_NAME, model.FileStoreType, form);
-                if (!ValidateProvider(DPCloudDefaults.FILE_PROVIDER_TYPE_NAME, model.FileStoreType))
-                    return await Configure();
-            }
-            if (pluginSetting.DownloadStoreType != model.DownloadStoreType)
-            {
-                SaveProviderSettings(DPCloudDefaults.DOWNLOAD_PROVIDER_TYPE_NAME, model.DownloadStoreType, form);
-                if (!ValidateProvider(DPCloudDefaults.DOWNLOAD_PROVIDER_TYPE_NAME, model.DownloadStoreType))
-                    return await Configure();
-            }
+            SaveProviderSettings(DPCloudDefaults.DOWNLOAD_PROVIDER_TYPE_NAME, model.DownloadStoreType, form);
+            if (!ValidateProvider(DPCloudDefaults.DOWNLOAD_PROVIDER_TYPE_NAME, model.DownloadStoreType))
+                return await Configure();
+
+            SaveProviderSettings(DPCloudDefaults.FILE_PROVIDER_TYPE_NAME, model.FileStoreType, form);
+            if (!ValidateProvider(DPCloudDefaults.FILE_PROVIDER_TYPE_NAME, model.FileStoreType))
+                return await Configure();
+
             await MoveDownloadStorageFilesAsync(model, pluginSetting);
 
             pluginSetting.DownloadStoreType = model.DownloadStoreType;

@@ -1,0 +1,24 @@
+﻿@using System.Text.Encodings.Web
+@model DevPartner.Nop.Plugin.CloudStorage.Azure.Models.SettingsModel
+@{
+    var nameContainer = @Model.ProviderType + ".Azure." + "Container";
+    var nameEndPoint = @Model.ProviderType + ".Azure." + "EndPoint";
+}
+<div class="form-group row">
+    <div class="col-md-3">
+        <nop-label asp-for="Container" />
+    </div>
+    <div class="col-md-9">
+        <input asp-for="Container" name="@nameContainer" class="form-control"/>
+        <span asp-validation-for="Container"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <div class="col-md-3">
+        <nop-label asp-for="EndPoint" />
+    </div>
+    <div class="col-md-9">
+        <input asp-for="@Model.EndPoint" name="@nameEndPoint" class="form-control" />
+        <span asp-validation-for="EndPoint"></span>
+    </div>
+</div>

@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Dev-Partner",
+  "FriendlyName": "DevPartner Cloud Amazon Storage",
+  "SystemName": "DevPartner.CloudStorage.Amazon",
+  "Version": "1.2",
+  "SupportedVersions": [ "4.50" ],
+  "Author": "Dev-Partner.biz",
+  "DisplayOrder": 3,
+  "FileName": "DevPartner.Nop.Plugin.CloudStorage.Amazon.dll",
+  "Description": "This plugin allows you to use Amazon for your downloads and pictures"
+}

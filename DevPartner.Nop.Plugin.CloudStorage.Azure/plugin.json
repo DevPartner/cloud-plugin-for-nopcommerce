@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Dev-Partner",
+  "FriendlyName": "DevPartner Cloud Azure Storage",
+  "SystemName": "DevPartner.CloudStorage.Azure",
+  "Version": "2.7",
+  "SupportedVersions": [ "4.50" ],
+  "Author": "Dev-Partner.biz",
+  "DisplayOrder": 3,
+  "FileName": "DevPartner.Nop.Plugin.CloudStorage.Azure.dll",
+  "Description": "This plugin allows you to use Azure for your downloads and pictures"
+}

@@ -13,6 +13,7 @@ using Nop.Services.Media;
 using Nop.Services.Seo;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -100,9 +101,8 @@ namespace DevPartner.Nop.Plugin.CloudStorage.Services.NopServices
         /// <returns></returns>
         protected virtual async Task<string> GetImagesPathUrlAsync(ICloudStorageProvider cloudStorageProvider, string fileName = "", string storeLocation = null)
         {
-
             var path = await GetPictureLocalPathAsync(fileName);
-            var virtualPath = _coudFileProvider.GetVirtualPath(path);
+            var virtualPath = _coudFileProvider.GetVirtualPath(path).TrimStart('~');
             return virtualPath;
         }
         #endregion 
@@ -130,10 +130,12 @@ namespace DevPartner.Nop.Plugin.CloudStorage.Services.NopServices
         /// <returns>Local picture thumb path</returns>
         protected override async Task<string> GetThumbUrlAsync(string thumbFileName, string storeLocation = null)
         {
-            if (CloudHelper.FileProvider == null)
+            if (CloudHelper.FileProvider.IsNull())
                 return await base.GetThumbUrlAsync(thumbFileName, storeLocation);
             var url = await GetImagesPathUrlAsync(CloudHelper.FileProvider, "thumbs/", storeLocation);
-
+            if (!url.EndsWith("/"))
+                url += "/";
+            //prepare URI object
             if (_mediaSettings2.MultipleThumbDirectories)
             {
                 //get the first two letters of the file name

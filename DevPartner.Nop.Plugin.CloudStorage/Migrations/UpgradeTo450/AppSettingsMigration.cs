@@ -20,8 +20,8 @@ namespace DevPartner.Nop.Plugin.CloudStorage.Migrations.UpgradeTo450
                     new FileProviderRuleConfig
                     {
                         Name = "Use Cloud For Images",
-                        Pattern = "(.*?)(\\\\images(\\\\)|$))",
-                        Replace = "$2"
+                        Pattern = "(.*?)(\\\\images)(\\\\|$)(.*)",
+                        Replace = "$3$4"
                     } 
                 }
             };

@@ -97,10 +97,9 @@ namespace DevPartner.Nop.Plugin.CloudStorage.Infrastructure
         {
         }
 
-
         /// <summary>
         /// Gets order of this startup configuration implementation
         /// </summary>
-        public int Order => 1;
+        public int Order => 3000;
     }
 }
